@@ -1,11 +1,12 @@
-import qualified Data.ByteString as B
-import Data.ByteString.Builder as B ( toLazyByteString, floatLE )
+import qualified Data.ByteString.Lazy as B
+import qualified Data.ByteString.Builder as Bl
 import Data.Foldable ()
+
+type Wave = [Float]
 
 volume :: Float
 volume = 0.5
 
-type Wave = [Float]
 
 step :: Float
 step = 0.01
@@ -17,4 +18,4 @@ wave :: [Float]
 wave = soundPrep [0.0 .. 48000]
 
 save :: IO()    
-save = B.writeFile "output.bin" $ B.toLazyByteString $ foldMap B.floatLE wave 
+save = B.writeFile "output.bin" $ Bl.toLazyByteString $ foldMap Bl.floatLE wave 
