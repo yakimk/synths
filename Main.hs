@@ -5,24 +5,32 @@ import System.Process ( runCommand )
 import Text.Printf ( printf )
 
 type Wave = [Float]
+type Sec = Float
+type Samples = Float
+type Hz = Float
 
 volume :: Float
-volume = 0.5
+volume = 0.3
 
 outPath :: FilePath
 outPath = "output.bin"
 
-sampleRate :: Float
+sampleRate :: Samples
 sampleRate = 48000
 
 step :: Float
 step = 0.03
 
-soundPrep :: Wave -> Wave
-soundPrep = map ((* volume) . sin . (* step)) 
+soundPrep :: Hz -> Wave -> Wave
+soundPrep freq = map ((* volume) . sin . (* (step * note)))
+    where
+        note = 1/freq
 
 wave :: [Float]
-wave = soundPrep [0.0 .. sampleRate]
+wave = soundPrep 440 [0.0 .. duration * sampleRate]
+    where 
+        duration :: Sec
+        duration = 0.5
 
 save :: FilePath ->  IO()    
 save filePath = B.writeFile filePath $ Bl.toLazyByteString $ foldMap Bl.floatLE wave 
@@ -30,5 +38,5 @@ save filePath = B.writeFile filePath $ Bl.toLazyByteString $ foldMap Bl.floatLE 
 play :: IO()
 play = do
     save outPath
-    _ <- runCommand $ printf "ffplay -f f32le -ar  %f %s" sampleRate outPath
+    _ <- runCommand $ printf "ffplay -showmode 1 -f f32le -ar  %f %s" sampleRate outPath
     return ()
