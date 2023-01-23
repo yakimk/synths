@@ -3,6 +3,7 @@ import qualified Data.ByteString.Builder as Bl
 import Data.Foldable ()
 import System.Process ( runCommand )
 import Text.Printf ( printf )
+import Pitch hiding (Hz)
 
 type Wave = [Float]
 type Sec = Float
@@ -15,14 +16,11 @@ volume = 0.3
 outPath :: FilePath
 outPath = "output.bin"
 
-a :: Hz
-a = 440
-
 sampleRate :: Samples
 sampleRate = 48000
 
 step :: Float
-step = (2*a*pi)/sampleRate
+step = (2*a4*pi)/sampleRate
 
 note :: Hz -> Sec -> Wave
 note freq s = map ((* volume) . sin . (* note)) [0.0 .. s * sampleRate]
@@ -30,7 +28,7 @@ note freq s = map ((* volume) . sin . (* note)) [0.0 .. s * sampleRate]
         note = (2*freq*pi)/sampleRate
 
 wave :: Wave
-wave =  note a 2
+wave =  note cs4 2
 save :: FilePath ->  IO()    
 save filePath = B.writeFile filePath $ Bl.toLazyByteString $ foldMap Bl.floatLE wave 
 

@@ -1,5 +1,7 @@
 module Pitch where
-import           Main (Hz)
+import Prelude hiding (Double)
+
+type Hz = Float
 
 {-
 C0	16.352 	C4	261.626     C8	4186.009
@@ -170,121 +172,239 @@ pitches =[16.352,
             12543.855,
             13289.752]
 
+type Double = Float
 
+c0 :: Double
 c0= 16.352
+cs0 :: Double
 cs0 = 17.324
+d0 :: Double
 d0 =18.354
+ds0 :: Double
 ds0 =19.445
+e0 :: Double
 e0 =20.602
+f0 :: Double
 f0 =21.827
+fs0 :: Double
 fs0 =23.125
+g0 :: Double
 g0 =24.500
+gs0 :: Double
 gs0 =25.957
+a0 :: Double
 a0 =27.500
+as0 :: Double
 as0 =29.135
+b0 :: Double
 b0 =30.868
+c1 :: Double
 c1 =32.703
+cs1 :: Double
 cs1 =34.648
+d1 :: Double
 d1 =36.708
+ds1 :: Double
 ds1 =38.891
+e1 :: Double
 e1 =41.203
+f1 :: Double
 f1 =43.654
+fs1 :: Double
 fs1 =46.249
+g1 :: Double
 g1 =48.999
+gs1 :: Double
 gs1 =51.913
+a1 :: Double
 a1 =55.000
+as1 :: Double
 as1 =58.270
+b1 :: Double
 b1 =61.735
+c2 :: Double
 c2 =65.406
+cs2 :: Double
 cs2 =69.296
+d2 :: Double
 d2 =73.416
+ds2 :: Double
 ds2 =77.782
+e2 :: Double
 e2 =82.407
+f2 :: Double
 f2 =87.307
+fs2 :: Double
 fs2 =92.499
+g2 :: Double
 g2 =97.999
+gs2 :: Double
 gs2 =103.826
+a2 :: Double
 a2 =110.000
+as2 :: Double
 as2 =116.541
+b2 :: Double
 b2 =123.471
+c3 :: Double
 c3 =130.813
+cs3 :: Double
 cs3 =138.591
+d3 :: Double
 d3 =146.832
+ds3 :: Double
 ds3 =155.564
+e3 :: Double
 e3 =164.814
+f3 :: Double
 f3 =174.614
+fs3 :: Double
 fs3 =184.997
+g3 :: Double
 g3 =195.998
+gs3 :: Double
 gs3 =207.652
+a3 :: Double
 a3 =220.000
+as3 :: Double
 as3 =233.082
+b3 :: Double
 b3 =246.942
+c4 :: Double
 c4 =261.626
+cs4 :: Double
 cs4 =277.183
+d4 :: Double
 d4 =293.665
+ds4 :: Double
 ds4 =311.127
+e4 :: Double
 e4 =329.628
+f4 :: Double
 f4 =349.228
+fs4 :: Double
 fs4 =369.994
+g4 :: Double
 g4 =391.995
+gs4 :: Double
 gs4 =415.305
+a4 :: Double
 a4 =440.000
+as4 :: Double
 as4 =466.164
+b4 :: Double
 b4 =493.883
+c5 :: Double
 c5 =523.251
+cs5 :: Double
 cs5 =554.365
+d5 :: Double
 d5 =587.330
+ds5 :: Double
 ds5 =622.254
+e5 :: Double
 e5 =659.255
+f5 :: Double
 f5 =698.457
+fs5 :: Double
 fs5 =739.989
+g5 :: Double
 g5 =783.991
+gs5 :: Double
 gs5 =830.609
+a5 :: Double
 a5 =880.000
+as5 :: Double
 as5 =932.328
+b5 :: Double
 b5 =987.767
+c6 :: Double
 c6 =1046.502
+cs6 :: Double
 cs6 =1108.731
+d6 :: Double
 d6 =1174.659
+ds6 :: Double
 ds6 =1244.508
+e6 :: Double
 e6 =1318.510
+f6 :: Double
 f6 =1396.913
+fs6 :: Double
 fs6 =1479.978
+g6 :: Double
 g6 =1567.982
+gs6 :: Double
 gs6 =1661.219
+a6 :: Double
 a6 =1760.000
+as6 :: Double
 as6 =1864.655
+b6 :: Double
 b6 =1975.533
+c7 :: Double
 c7 =2093.005
+cs7 :: Double
 cs7 =2217.461
+d7 :: Double
 d7 =2349.318
+ds7 :: Double
 ds7 =2489.016
+e7 :: Double
 e7 =2637.021
+f7 :: Double
 f7 =2793.826
+fs7 :: Double
 fs7 =2959.956
+g7 :: Double
 g7 =3135.964
+gs7 :: Double
 gs7 =3322.438
+a7 :: Double
 a7 =3520.000
+as7 :: Double
 as7 =3729.310
+b7 :: Double
 b7 =3951.066
+c8 :: Float
 c8 =4186.009
+cs8 :: Float
 cs8 =4434.922
+d8 :: Float
 d8 =4698.637
+ds8 :: Float
 ds8 =4978.032
+e8 :: Float
 e8 =5274.042
+f8 :: Float
 f8 =5587.652
+fs8 :: Float
 fs8 =5919.912
+g8 :: Float
 g8 =6271.928
+gs8 :: Float
 gs8 =6644.876
+a8 :: Float
 a8  =7040.000
+as8 :: Float
 as8 =7458.620
+b8 :: Float
 b8 =7902.133
+c9 :: Float
 c9 =8372.019
+cs9 :: Float
 cs9 =8869.845
+d9 :: Float
 d9 =9397.273
+ds9 :: Float
 ds9 =9956.064
+e9 :: Float
 e9 =10548.083
+f9 :: Float
 f9 =11175.305
+fs9 :: Float
 fs9 =11839.823
+g9 :: Float
 g9 =12543.855
+gs9 :: Float
 gs9 =13289.752
