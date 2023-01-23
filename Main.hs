@@ -9,6 +9,7 @@ type Wave = [Float]
 type Sec = Float
 type Samples = Float
 type Hz = Float
+type Note = (Hz, Sec)
 
 volume :: Float
 volume = 0.3
@@ -22,13 +23,15 @@ sampleRate = 48000
 step :: Float
 step = (2*a4*pi)/sampleRate
 
-note :: Hz -> Sec -> Wave
-note freq s = map ((* volume) . sin . (* note)) [0.0 .. s * sampleRate]
+note :: Note -> Wave
+note (freq, s) = map ((* volume) . sin . (* note)) [0.0 .. s * sampleRate]
     where
         note = (2*freq*pi)/sampleRate
 
 wave :: Wave
-wave =  note cs4 2
+wave  =  concatMap note [(a4, 0.5), (b4, 0.5), (cs5, 0.5)]
+
+
 save :: FilePath ->  IO()    
 save filePath = B.writeFile filePath $ Bl.toLazyByteString $ foldMap Bl.floatLE wave 
 
