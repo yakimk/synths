@@ -15,23 +15,22 @@ volume = 0.3
 outPath :: FilePath
 outPath = "output.bin"
 
+a :: Hz
+a = 440
+
 sampleRate :: Samples
 sampleRate = 48000
 
 step :: Float
-step = 0.03
+step = (2*a*pi)/sampleRate
 
-soundPrep :: Hz -> Wave -> Wave
-soundPrep freq = map ((* volume) . sin . (* (step * note)))
+note :: Hz -> Sec -> Wave
+note freq s = map ((* volume) . sin . (* note)) [0.0 .. s * sampleRate]
     where
-        note = 1/freq
+        note = (2*freq*pi)/sampleRate
 
-wave :: [Float]
-wave = soundPrep 440 [0.0 .. duration * sampleRate]
-    where 
-        duration :: Sec
-        duration = 0.5
-
+wave :: Wave
+wave =  note a 2
 save :: FilePath ->  IO()    
 save filePath = B.writeFile filePath $ Bl.toLazyByteString $ foldMap Bl.floatLE wave 
 
