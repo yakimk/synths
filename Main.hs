@@ -10,8 +10,15 @@ type Wave = [Float]
 type Sec = Float
 type Samples = Float
 type Hz = Float
-type Note = (Hz, Sec)
+type Note = (Hz, Beat)
 type Phrase = [Note]
+type Beat = Float
+
+bpm :: Beat
+bpm = 100
+
+beatDuration :: Sec
+beatDuration = 60/bpm
 
 comb :: Fractional a => [a] -> [a] -> [a]
 comb xs [] = xs
@@ -33,13 +40,13 @@ step :: Float
 step = (2*a4*pi)/sampleRate
 
 note :: Note -> Wave
-note (freq, s) = zipWith3 (\x y z -> x*y*z) volumes release output
+note (freq, b) = zipWith3 (\x y z -> x*y*z) volumes release output
     where
         note = (2*freq*pi)/sampleRate
         volumes = map  (* volume) attack
         attack = map (min 1.0) [0.0, 0.001 ..]
         release = reverse $ take (length output) attack
-        output =  map (sin . (* note)) [0.0 .. s * sampleRate]
+        output =  map (sin . (* note)) [0.0 .. (b*beatDuration) * sampleRate]
 
 phrase :: Phrase -> Wave
 phrase = concatMap note
@@ -61,7 +68,7 @@ play = do
 
 
 line1 :: Phrase
-line1 = [(a4, 0.5), (a4, 0.5), (a4, 0.5)]
+line1 = [(a4, 1), (a4, 1), (a4, 1)]
 
 line2 :: Phrase
 line2= []
