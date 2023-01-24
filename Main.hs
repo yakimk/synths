@@ -11,9 +11,9 @@ type Volume = Float
 type Sec = Float
 type Samples = Float
 type Hz = Float
-type Note = (Hz, Beat, Volume)
 type Phrase = [Note]
 type Beat = Float
+type Note = [Float]
 
 bpm :: Beat
 bpm = 100
@@ -28,7 +28,7 @@ comb (x:xs) (y:ys) = res : comb xs ys
     where
         res = (x+y) / 2.0
 
-volume :: Float
+volume :: Volume
 volume = 0.3
 
 outPath :: FilePath
@@ -38,30 +38,35 @@ sampleRate :: Samples
 sampleRate = 48000
 
 note :: Note -> Wave
-note (freq, b) = zipWith3 (\x y z -> x*y*z) volumes release output
+note [freq, beats, vol] = zipWith3 (\x y z -> x*y*z) volumes release output
     where
         note = (2*freq*pi)/sampleRate
-        volumes = map  (* volume) attack
+        volumes = map  (* vol) attack
         attack = map (min 1.0) [0.0, 0.001 ..]
         release = reverse $ take (length output) attack
-        output =  map (sin . (* note)) [0.0 .. (b*beatDuration) * sampleRate]
+        output =  map (sin . (* note)) [0.0 .. (beats*beatDuration) * sampleRate]
 
 phrase :: Phrase -> Wave
-phrase = concatMap note
+phrase = concatMap note 
 
 wave :: Phrase -> Wave
 wave  = phrase
 
-waves :: (Wave, Wave) -> Wave
-waves (x,y) = comb x y
+waves :: [Wave] -> Wave
+waves []       = []
+waves [x]      = x
+waves (x:xs) = comb x $  waves xs
 
-waves' :: [Wave] -> Wave
-waves' []       = []
-waves' [x]      = x
-waves' (x:xs) = comb x $  waves' xs
+volumeNormalization :: Wave -> Wave
+volumeNormalization = map (*volume)
 
 save :: FilePath ->  IO()
-save filePath = B.writeFile filePath $ Bl.toLazyByteString $ foldMap Bl.floatLE $ waves' [wave line1, wave line2, wave line3, wave line4]
+save filePath = 
+    B.writeFile filePath 
+    $ Bl.toLazyByteString 
+    $ foldMap Bl.floatLE 
+    $ volumeNormalization 
+    $ waves [wave line1, wave line2, wave line3, wave line4]
 
 play :: IO()
 play = do
@@ -69,15 +74,30 @@ play = do
     _ <- runCommand $ printf "ffplay -showmode 1 -f f32le -ar  %f %s" sampleRate outPath
     return ()
 
+parseNote :: Fractional a => [a] -> [a]
+parseNote [] = []
+parseNote [x,y] = [x,y,1]
+parseNote [x,y,z] = [x,y,z]
+
+p
 
 line1 :: Phrase
-line1 = [(a4, 1), (g6, 1), (a4, 1), (a3,2)]
+line1 = [[a4, 1], [g6, 1], [a4, 1], [a3,2]]
 
 line2 :: Phrase
-line2= [(b4,1), (c3,2), (e2, 2)]
+line2= [[b4,1], [c3,2], [e2, 2]]
 
 line3 :: Phrase
-line3= [(b2,1), (c2,2), (e1, 2)]
+line3= [[b2, 1], [c2,2], [e1, 2]]
 
 line4 :: Phrase
-line4= [(e5,1), (b4,2), (ds6, 2)]
+line4= [[e5,1], [b4,2], [ds6, 2]]
+
+zr :: Int -> [Int]
+zr = zr' []
+  where
+     zr' :: [Int] -> Int -> [Int]
+     zr' x y
+         | length x == y = x
+         | otherwise = zr' (x++[0]) y
+
