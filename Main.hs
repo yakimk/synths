@@ -47,7 +47,7 @@ note [freq, beats, vol] = zipWith3 (\x y z -> x*y*z) volumes release output
         output =  map (sin . (* note)) [0.0 .. (beats*beatDuration) * sampleRate]
 
 phrase :: Phrase -> Wave
-phrase = concatMap note 
+phrase = concatMap note . parsePhrase
 
 wave :: Phrase -> Wave
 wave  = phrase
@@ -79,7 +79,8 @@ parseNote [] = []
 parseNote [x,y] = [x,y,1]
 parseNote [x,y,z] = [x,y,z]
 
-p
+parsePhrase :: Phrase -> Phrase
+parsePhrase = map parseNote
 
 line1 :: Phrase
 line1 = [[a4, 1], [g6, 1], [a4, 1], [a3,2]]
