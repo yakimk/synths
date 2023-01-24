@@ -1,16 +1,17 @@
-import qualified Data.ByteString.Lazy as B
 import qualified Data.ByteString.Builder as Bl
-import Data.Foldable ()
-import Data.List
-import System.Process ( runCommand )
-import Text.Printf ( printf )
-import Pitch hiding (Hz)
+import qualified Data.ByteString.Lazy    as B
+import           Data.Foldable           ()
+import           Data.List
+import           Pitch                   hiding (Hz)
+import           System.Process          (runCommand)
+import           Text.Printf             (printf)
 
 type Wave = [Float]
+type Volume = Float
 type Sec = Float
 type Samples = Float
 type Hz = Float
-type Note = (Hz, Beat)
+type Note = (Hz, Beat, Volume)
 type Phrase = [Note]
 type Beat = Float
 
@@ -36,9 +37,6 @@ outPath = "output.bin"
 sampleRate :: Samples
 sampleRate = 48000
 
-step :: Float
-step = (2*a4*pi)/sampleRate
-
 note :: Note -> Wave
 note (freq, b) = zipWith3 (\x y z -> x*y*z) volumes release output
     where
@@ -54,11 +52,16 @@ phrase = concatMap note
 wave :: Phrase -> Wave
 wave  = phrase
 
-waves :: (Wave,Wave) -> Wave
-waves (x,y) = comb x y 
+waves :: (Wave, Wave) -> Wave
+waves (x,y) = comb x y
+
+waves' :: [Wave] -> Wave
+waves' []       = []
+waves' [x]      = x
+waves' (x:xs) = comb x $  waves' xs
 
 save :: FilePath ->  IO()
-save filePath = B.writeFile filePath $ Bl.toLazyByteString $ foldMap Bl.floatLE $ waves (wave line1, wave line2)
+save filePath = B.writeFile filePath $ Bl.toLazyByteString $ foldMap Bl.floatLE $ waves' [wave line1, wave line2, wave line3, wave line4]
 
 play :: IO()
 play = do
@@ -68,7 +71,13 @@ play = do
 
 
 line1 :: Phrase
-line1 = [(a4, 1), (a4, 1), (a4, 1)]
+line1 = [(a4, 1), (g6, 1), (a4, 1), (a3,2)]
 
 line2 :: Phrase
-line2= []
+line2= [(b4,1), (c3,2), (e2, 2)]
+
+line3 :: Phrase
+line3= [(b2,1), (c2,2), (e1, 2)]
+
+line4 :: Phrase
+line4= [(e5,1), (b4,2), (ds6, 2)]
