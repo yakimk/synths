@@ -92,7 +92,7 @@ line3 :: Phrase
 line3= [[b2, 1], [c2,2], [e1, 2]]
 
 line4 :: Phrase
-line4= [[e5,1], [b4,2], [ds6, 2]]
+line4= [[e5,1], [b4,2], [ds6, 2, 0.5]]
 
 zr :: Int -> [Int]
 zr = zr' []
