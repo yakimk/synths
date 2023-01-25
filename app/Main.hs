@@ -1,14 +1,15 @@
 module Main (main) where
 
-import Lib
+import Lib()
 
 import qualified Data.ByteString.Builder as Bl
 import qualified Data.ByteString.Lazy    as B
 import           Data.Foldable           ()
-import           Data.List
+import qualified Data.List()
 import           Pitch                   hiding (Hz)
 import           System.Process          (runCommand)
 import           Text.Printf             (printf)
+import qualified VolumeModulator as VM
 
 type Wave = [Float]
 type Volume = Float
@@ -44,11 +45,12 @@ sampleRate = 48000
 note :: Note -> Wave
 note [freq, beats, vol] = zipWith3 (\x y z -> x*y*z) volumes release output
     where
-        note = (2*freq*pi)/sampleRate
+        pitch = (2*freq*pi)/sampleRate
         volumes = map  (* vol) attack
         attack = map (min 1.0) [0.0, 0.001 ..]
         release = reverse $ take (length output) attack
-        output =  map (sin . (* note)) [0.0 .. (beats*beatDuration) * sampleRate]
+        output =  map (sin . (* pitch)) [0.0 .. (beats*beatDuration) * sampleRate]
+note x = x
 
 phrase :: Phrase -> Wave
 phrase = concatMap note . parsePhrase
@@ -69,6 +71,7 @@ save filePath =
     B.writeFile filePath 
     $ Bl.toLazyByteString 
     $ foldMap Bl.floatLE 
+    $ VM.sinVolumeModulation 5
     $ volumeNormalization 
     $ waves [wave line1, wave line2, wave line3, wave line4]
 
@@ -80,8 +83,10 @@ play = do
 
 parseNote :: Fractional a => [a] -> [a]
 parseNote [] = []
+parseNote [x] = [x,1,1]
 parseNote [x,y] = [x,y,1]
 parseNote [x,y,z] = [x,y,z]
+parseNote x = x
 
 parsePhrase :: Phrase -> Phrase
 parsePhrase = map parseNote
@@ -98,15 +103,5 @@ line3= [[b2, 1], [c2,2], [e1, 2]]
 line4 :: Phrase
 line4= [[e5,1], [b4,2], [ds6, 2, 0.5]]
 
-zr :: Int -> [Int]
-zr = zr' []
-  where
-     zr' :: [Int] -> Int -> [Int]
-     zr' x y
-         | length x == y = x
-         | otherwise = zr' (x++[0]) y
-
-
-
 main :: IO ()
-main = someFunc
+main = play

@@ -28,6 +28,7 @@ library
       Lib
       LList
       Pitch
+      VolumeModulator
   other-modules:
       Paths_synths
   hs-source-dirs:
