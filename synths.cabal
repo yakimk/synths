@@ -6,12 +6,12 @@ cabal-version: 1.12
 
 name:           synths
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/synths#readme>
-homepage:       https://github.com/githubuser/synths#readme
-bug-reports:    https://github.com/githubuser/synths/issues
+description:    Please see the README on GitHub at <https://github.com/yakimk/synths#readme>
+homepage:       https://github.com/yakimk/synths#readme
+bug-reports:    https://github.com/yakimk/synths/issues
 author:         Author name here
-maintainer:     example@example.com
-copyright:      2023 Author name here
+maintainer:     beateleven11@gmail.com
+copyright:      2023 yakimk
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
@@ -21,14 +21,11 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/synths
+  location: https://github.com/yakimk/synths
 
 library
   exposed-modules:
-      Definitions
       Lib
-      LList
-      Pitch
   other-modules:
       Paths_synths
   hs-source-dirs:
