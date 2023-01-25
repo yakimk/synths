@@ -1,9 +1,9 @@
-module VolumeModulator(sinVolumeModulation, squareVolumeModulation)
+module VolumeModulator(sinVolumeModulation, squareVolumeModulation, squareVolumeModulation1)
  where
 
 import Lib (Wave, Hz)
 
-applyVolumeModulation :: [Float] -> Wave -> Wave
+applyVolumeModulation :: Wave -> Wave -> Wave
 applyVolumeModulation modulation wave = zipWith (*) wave modulation
 
 sinVolumeModulation :: Float -> Wave -> Wave
@@ -15,3 +15,6 @@ squareVolumeModulation :: Hz -> Wave -> Wave
 squareVolumeModulation freq wave = applyVolumeModulation wave $ map (signum . sin) $ take (length wave) [0, rate ..]
     where
         rate =   1/(2 * pi * freq)
+
+squareVolumeModulation1 :: Hz -> Wave -> Wave
+squareVolumeModulation1 freq wave = applyVolumeModulation wave $ map (* (4/9)) $ map sin $ map (* 9) $ take (length wave) [0, 0.01 ..]
