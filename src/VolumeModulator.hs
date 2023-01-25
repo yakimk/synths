@@ -17,4 +17,4 @@ squareVolumeModulation freq wave = applyVolumeModulation wave $ map (signum . si
         rate =   1/(2 * pi * freq)
 
 squareVolumeModulation1 :: Hz -> Wave -> Wave
-squareVolumeModulation1 freq wave = applyVolumeModulation wave $ map (* (4/9)) $ map sin $ map (* 9) $ take (length wave) [0, 0.01 ..]
+squareVolumeModulation1 freq wave = applyVolumeModulation wave $ map (sin . (* 9)) (take (length wave) [0, 0.001 .. ])

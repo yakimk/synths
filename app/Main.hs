@@ -62,8 +62,8 @@ save filePath =
     B.writeFile filePath 
     $ Bl.toLazyByteString 
     $ foldMap Bl.floatLE 
-    -- $ VM.sinVolumeModulation 8
-   -- $ VM.squareVolumeModulation 40
+    $ VM.sinVolumeModulation 8
+    -- $ VM.squareVolumeModulation 40
     $ VM.squareVolumeModulation1 40
     $ volumeNormalization 
     $ waves [wave line1, wave line2, wave line3, wave line4]
