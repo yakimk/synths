@@ -1,3 +1,7 @@
+module Main (main) where
+
+import Lib
+
 import qualified Data.ByteString.Builder as Bl
 import qualified Data.ByteString.Lazy    as B
 import           Data.Foldable           ()
@@ -6,14 +10,6 @@ import           Pitch                   hiding (Hz)
 import           System.Process          (runCommand)
 import           Text.Printf             (printf)
 
-type Wave = [Float]
-type Volume = Float
-type Sec = Float
-type Samples = Float
-type Hz = Float
-type Phrase = [Note]
-type Beat = Float
-type Note = [Float]
 
 bpm :: Beat
 bpm = 100
@@ -102,3 +98,7 @@ zr = zr' []
          | length x == y = x
          | otherwise = zr' (x++[0]) y
 
+
+
+main :: IO ()
+main = someFunc
