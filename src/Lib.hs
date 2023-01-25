@@ -1,8 +1,15 @@
 module Lib
-    ( someFunc
+    (
+    Wave,
+    Volume,
+    Sec,
+    Samples,
+    Phrase,
+    Hz,
+    Beat,
+    Note,
     ) where
-import Pitch
-
+        
 type Wave = [Float]
 type Volume = Float
 type Sec = Float
@@ -11,7 +18,3 @@ type Hz = Float
 type Phrase = [Note]
 type Beat = Float
 type Note = [Float]
-
-
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"

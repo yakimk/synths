@@ -1,6 +1,6 @@
 module Main (main) where
 
-import Lib()
+import Lib
 
 import qualified Data.ByteString.Builder as Bl
 import qualified Data.ByteString.Lazy    as B
@@ -10,15 +10,6 @@ import           Pitch                   hiding (Hz)
 import           System.Process          (runCommand)
 import           Text.Printf             (printf)
 import qualified VolumeModulator as VM
-
-type Wave = [Float]
-type Volume = Float
-type Sec = Float
-type Samples = Float
-type Hz = Float
-type Phrase = [Note]
-type Beat = Float
-type Note = [Float]
 
 bpm :: Beat
 bpm = 100
@@ -71,7 +62,7 @@ save filePath =
     B.writeFile filePath 
     $ Bl.toLazyByteString 
     $ foldMap Bl.floatLE 
-    $ VM.sinVolumeModulation 5
+    $ VM.sinVolumeModulation 8
     $ volumeNormalization 
     $ waves [wave line1, wave line2, wave line3, wave line4]
 
