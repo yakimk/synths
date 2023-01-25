@@ -10,7 +10,6 @@ import           Pitch                   hiding (Hz)
 import           System.Process          (runCommand)
 import           Text.Printf             (printf)
 
-
 bpm :: Beat
 bpm = 100
 

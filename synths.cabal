@@ -6,12 +6,12 @@ cabal-version: 1.12
 
 name:           synths
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/yakimk/synths#readme>
-homepage:       https://github.com/yakimk/synths#readme
-bug-reports:    https://github.com/yakimk/synths/issues
+description:    Please see the README on GitHub at <https://github.com/githubuser/synths#readme>
+homepage:       https://github.com/githubuser/synths#readme
+bug-reports:    https://github.com/githubuser/synths/issues
 author:         Author name here
-maintainer:     beateleven11@gmail.com
-copyright:      2023 yakimk
+maintainer:     example@example.com
+copyright:      2023 Author name here
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
@@ -21,11 +21,13 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/yakimk/synths
+  location: https://github.com/githubuser/synths
 
 library
   exposed-modules:
       Lib
+      LList
+      Pitch
   other-modules:
       Paths_synths
   hs-source-dirs:
@@ -45,6 +47,8 @@ executable synths-exe
   build-depends:
       base >=4.7 && <5
     , synths
+    , process
+    , bytestring
   default-language: Haskell2010
 
 test-suite synths-test
