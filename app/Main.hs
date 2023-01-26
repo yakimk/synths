@@ -1,6 +1,6 @@
 module Main (main) where
 
-import Lib
+import Lib ( Beat, Note, Phrase, Samples, Sec, Volume, Wave )
 
 import qualified Data.ByteString.Builder as Bl
 import qualified Data.ByteString.Lazy    as B
@@ -33,18 +33,19 @@ outPath = "output.bin"
 sampleRate :: Samples
 sampleRate = 48000
 
-note :: Note -> Wave
-note [freq, beats, vol] = zipWith3 (\x y z -> x*y*z) volumes release output
+note :: Maybe Float -> Note -> Wave
+note Nothing [freq, beats, vol] = zipWith3 (\x y z -> x*y*z) volumes release output
     where
         pitch = (2*freq*pi)/sampleRate
         volumes = map  (* vol) attack
         attack = map (min 1.0) [0.0, 0.001 ..]
         release = reverse $ take (length output) attack
         output =  map (sin . (* pitch)) [0.0 .. (beats*beatDuration) * sampleRate]
-note x = x
+note (Just a) _ = [a]
+note _ _ = []
 
 phrase :: Phrase -> Wave
-phrase = concatMap note . parsePhrase
+phrase = concatMap (note Nothing) . parsePhrase
 
 wave :: Phrase -> Wave
 wave  = phrase
@@ -62,9 +63,9 @@ save filePath =
     B.writeFile filePath 
     $ Bl.toLazyByteString 
     $ foldMap Bl.floatLE 
-    $ VM.sinVolumeModulation 8
+    -- $ VM.sinVolumeModulation 8
     -- $ VM.squareVolumeModulation 40
-    $ VM.squareVolumeModulation1 40
+    $ VM.squareVolumeModulation1 0.1
     $ volumeNormalization 
     $ waves [wave line1, wave line2, wave line3, wave line4]
 
@@ -82,7 +83,7 @@ parseNote [x,y,z] = [x,y,z]
 parseNote x = x
 
 parsePhrase :: Phrase -> Phrase
-parsePhrase = map parseNote
+parsePhrase =  map parseNote
 
 line1 :: Phrase
 line1 = [[a4, 1], [g6, 1], [a4, 1], [a3,2]]
