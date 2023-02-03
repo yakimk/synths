@@ -2,6 +2,7 @@ module Main (main) where
 
 import Lib ( Beat, Note, Phrase, Samples, Sec, Volume, Wave )
 
+import Wave as W 
 import qualified Data.ByteString.Builder as Bl
 import qualified Data.ByteString.Lazy    as B
 import           Data.Foldable           ()
@@ -10,7 +11,6 @@ import           Pitch                   hiding (Hz)
 import           System.Process          (runCommand)
 import           Text.Printf             (printf)
 import qualified Oscillation as VM
-import qualified Wave
 
 bpm :: Beat
 bpm = 100
@@ -54,7 +54,7 @@ compression output = zipWith (*) attack  release
         release = reverse $ take (length output) attack
 
 phrase :: Phrase -> Wave
-phrase = concatMap (note Nothing) . parsePhrase
+phrase = concatMap (compression . note Nothing) . parsePhrase
 
 wave :: Phrase -> Wave
 wave  = phrase

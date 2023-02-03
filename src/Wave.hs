@@ -1,6 +1,6 @@
 module Wave 
 (squareWave)
-where
+ where
 
 import Lib ()
 
