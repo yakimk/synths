@@ -27,8 +27,9 @@ library
   exposed-modules:
       Lib
       LList
+      Oscillation
       Pitch
-      VolumeModulator
+      Wave
   other-modules:
       Paths_synths
   hs-source-dirs:

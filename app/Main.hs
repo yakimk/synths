@@ -9,7 +9,7 @@ import qualified Data.List()
 import           Pitch                   hiding (Hz)
 import           System.Process          (runCommand)
 import           Text.Printf             (printf)
-import qualified VolumeModulator as VM
+import qualified Oscillation as VM
 
 bpm :: Beat
 bpm = 100
@@ -65,7 +65,7 @@ save filePath =
     $ foldMap Bl.floatLE 
     -- $ VM.sinVolumeModulation 8
     -- $ VM.squareVolumeModulation 40
-    $ VM.squareVolumeModulation1 0.1
+    $ VM.squareOscillator1 1
     $ volumeNormalization 
     $ waves [wave line1, wave line2, wave line3, wave line4]
 
