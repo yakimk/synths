@@ -10,6 +10,7 @@ import           Pitch                   hiding (Hz)
 import           System.Process          (runCommand)
 import           Text.Printf             (printf)
 import qualified Oscillation as VM
+import qualified Wave
 
 bpm :: Beat
 bpm = 100
