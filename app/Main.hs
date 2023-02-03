@@ -33,16 +33,24 @@ outPath = "output.bin"
 sampleRate :: Samples
 sampleRate = 48000
 
-note :: Maybe Float -> Note -> Wave
-note Nothing [freq, beats, vol] = zipWith3 (\x y z -> x*y*z) volumes release output
+note :: Maybe (Float -> Float) -> Note -> Wave
+note (Just a) [freq, beats, vol] = map (*vol) output
     where
         pitch = (2*freq*pi)/sampleRate
-        volumes = map  (* vol) attack
+        output =  map (a . (* pitch)) [0.0 .. (beats*beatDuration) * sampleRate]
+
+note Nothing [freq, beats, vol] =  map (*vol) output
+    where
+        pitch = (2*freq*pi)/sampleRate
+        output =  map (sin . (* pitch)) [0.0 .. (beats*beatDuration) * sampleRate]
+
+note _ _ = []
+
+compression :: Wave -> Wave
+compression output = zipWith (*) attack  release
+    where
         attack = map (min 1.0) [0.0, 0.001 ..]
         release = reverse $ take (length output) attack
-        output =  map (sin . (* pitch)) [0.0 .. (beats*beatDuration) * sampleRate]
-note (Just a) _ = [a]
-note _ _ = []
 
 phrase :: Phrase -> Wave
 phrase = concatMap (note Nothing) . parsePhrase
