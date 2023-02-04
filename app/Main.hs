@@ -1,13 +1,13 @@
 module Main (main) where
 
-import Lib ( Beat, Note, Phrase, Samples, Sec, Volume, Wave )
+import Lib ( Beat, Note, Phrase, Samples, Sec, Volume, Wave, WaveFunction, WaveTransform)
 
-import Wave as W 
+import qualified Wave
 import qualified Data.ByteString.Builder as Bl
 import qualified Data.ByteString.Lazy    as B
 import           Data.Foldable           ()
 import qualified Data.List()
-import           Pitch                   hiding (Hz)
+import Pitch ( a3, a4, b2, b4, c2, c3, ds6, e1, e2, e5, g6 )
 import           System.Process          (runCommand)
 import           Text.Printf             (printf)
 import qualified Oscillation as VM
@@ -17,6 +17,9 @@ bpm = 100
 
 beatDuration :: Sec
 beatDuration = 60/bpm
+
+defaultWavetransform :: WaveTransform
+defaultWavetransform = sin
 
 comb :: Fractional a => [a] -> [a] -> [a]
 comb xs [] = xs
@@ -34,27 +37,22 @@ outPath = "output.bin"
 sampleRate :: Samples
 sampleRate = 48000
 
-note :: Maybe (Float -> Float) -> Note -> Wave
+note :: Maybe WaveTransform -> Note -> Wave
+note Nothing n = note (Just defaultWavetransform) n
 note (Just a) [freq, beats, vol] = map (*vol) output
     where
         pitch = (2*freq*pi)/sampleRate
-        output =  map (a . (* pitch)) [0.0 .. (beats*beatDuration) * sampleRate]
+        output =  map (a . (*pitch)) [0.0 .. (beats*beatDuration) * sampleRate]
 
-note Nothing [freq, beats, vol] =  map (*vol) output
+compression :: WaveFunction
+compression output = zipWith (*) comp output
     where
-        pitch = (2*freq*pi)/sampleRate
-        output =  map (sin . (* pitch)) [0.0 .. (beats*beatDuration) * sampleRate]
-
-note _ _ = []
-
-compression :: Wave -> Wave
-compression output = zipWith (*) attack  release
-    where
+        comp = zipWith (*) attack release
         attack = map (min 1.0) [0.0, 0.001 ..]
         release = reverse $ take (length output) attack
 
 phrase :: Phrase -> Wave
-phrase = concatMap (compression . note Nothing) . parsePhrase
+phrase = concatMap (compression . note (Just Wave.squareWave)) . parsePhrase
 
 wave :: Phrase -> Wave
 wave  = phrase
@@ -64,7 +62,7 @@ waves []       = []
 waves [x]      = x
 waves (x:xs) = comb x $  waves xs
 
-volumeNormalization :: Wave -> Wave
+volumeNormalization :: WaveFunction
 volumeNormalization = map (*volume)
 
 save :: FilePath ->  IO()
@@ -74,9 +72,10 @@ save filePath =
     $ foldMap Bl.floatLE 
     -- $ VM.sinVolumeModulation 8
     -- $ VM.squareVolumeModulation 40
-    $ VM.squareOscillator1 1
+    -- $ VM.squareOscillator1 1
     $ volumeNormalization 
-    $ waves [wave line1, wave line2, wave line3, wave line4]
+    $ wave line1
+    -- $ waves [wave line1, wave line2, wave line3, wave line4]
 
 play :: IO()
 play = do
